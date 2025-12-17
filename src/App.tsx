@@ -2,7 +2,6 @@ import './index.css'
 import { useEffect, useState } from 'react'
 import ChatWindow from './components/ChatWindow'
 import ChatInput from './components/ChatInput'
-import ThemeToggle from './components/ThemeToggle'
 import { streamWeatherAgent } from './api/weatherAgent'
 import Navbar from './components/Navbar'
 

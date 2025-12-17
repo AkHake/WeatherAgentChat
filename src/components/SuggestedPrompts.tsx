@@ -11,7 +11,7 @@ const prompts = [
 const SuggestedPrompts = ({ onSelect }: SuggestedPromptsProps) => {
     return (
         <div className="suggested-prompts">
-            {prompts.map((prompt, index) => (
+            {prompts.map(prompt => (
                 // <button
                 //   key={index}
                 //   onClick={() => onSelect(prompt)}
