@@ -34,14 +34,20 @@ and modern frontend architecture.
 ### 1. Install dependencies
 ```bash
 npm install
+```
 
 ### 2. Environment setup
-
 Create a .env file in the project root:
+```bash
 VITE_WEATHER_AGENT_URL=YOUR_API_URL
+```
 
 ### 3. Run the app
 ```bash
 npm run dev
 ```
+
+The app will be available at:
+```bash
 http://localhost:5173
+```
