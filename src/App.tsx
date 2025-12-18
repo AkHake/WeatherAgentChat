@@ -2,7 +2,8 @@ import './index.css'
 import { useEffect, useState } from 'react'
 import ChatWindow from './components/ChatWindow'
 import ChatInput from './components/ChatInput'
-import { streamWeatherAgent } from './api/weatherAgent'
+// import { streamWeatherAgent } from './api/weatherAgent'
+import { fetchWeatherAgent } from './api/weatherAgent'
 import Navbar from './components/Navbar'
 
 export type Message = {
@@ -24,6 +25,50 @@ function App() {
     localStorage.setItem('theme', theme)
   }, [theme])
 
+  // const sendMessage = async (text: string) => {
+  //   if (!text.trim() || isLoading) return
+
+  //   const userMessage: Message = { role: 'user', content: text }
+
+  //   setMessages(prev => [...prev, userMessage])
+  //   setIsLoading(true)
+
+  //   // Add empty agent message
+  //   setMessages(prev => [...prev, { role: 'agent', content: '' }])
+
+  //   let agentResponse = ''
+
+  //   try {
+  //     await streamWeatherAgent({
+  //       messages: [...messages, userMessage],
+  //       onToken: (token: string) => {
+  //         agentResponse += token
+
+  //         setMessages(prev => {
+  //           const updated = [...prev]
+  //           updated[updated.length - 1] = {
+  //             role: 'agent',
+  //             content: agentResponse,
+  //           }
+  //           return updated
+  //         })
+  //       },
+  //     })
+  //   } catch (error) {
+  //     setMessages(prev => {
+  //       const updated = [...prev]
+  //       updated[updated.length - 1] = {
+  //         role: 'agent',
+  //         content:
+  //           '⚠️ The weather agent is currently unavailable. Please try again later.',
+  //         variant: 'error',
+  //       }
+  //       return updated
+  //     })
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
   const sendMessage = async (text: string) => {
     if (!text.trim() || isLoading) return
 
@@ -32,42 +77,31 @@ function App() {
     setMessages(prev => [...prev, userMessage])
     setIsLoading(true)
 
-    // Add empty agent message
-    setMessages(prev => [...prev, { role: 'agent', content: '' }])
-
-    let agentResponse = ''
-
     try {
-      await streamWeatherAgent({
-        messages: [...messages, userMessage],
-        onToken: (token: string) => {
-          agentResponse += token
+      const agentReply = await fetchWeatherAgent(text)
 
-          setMessages(prev => {
-            const updated = [...prev]
-            updated[updated.length - 1] = {
-              role: 'agent',
-              content: agentResponse,
-            }
-            return updated
-          })
+      setMessages(prev => [
+        ...prev,
+        {
+          role: 'agent',
+          content: agentReply,
         },
-      })
+      ])
     } catch (error) {
-      setMessages(prev => {
-        const updated = [...prev]
-        updated[updated.length - 1] = {
+      setMessages(prev => [
+        ...prev,
+        {
           role: 'agent',
           content:
             '⚠️ The weather agent is currently unavailable. Please try again later.',
           variant: 'error',
-        }
-        return updated
-      })
+        },
+      ])
     } finally {
       setIsLoading(false)
     }
   }
+
 
   const exportChat = () => {
     if (messages.length === 0) return
